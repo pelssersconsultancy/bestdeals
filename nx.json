@@ -18,16 +18,18 @@
       "runner": "@nrwl/nx-cloud",
       "options": {
         "accessToken": "OTBkZDkwYWEtZDljNC00N2YyLTgyYmQtYjE5Y2IwODU4NjM3fHJlYWQtd3JpdGU=",
-        "cacheableOperations": [
-          "build",
-          "test",
-          "lint",
-          "e2e"
-        ],
+        "cacheableOperations": ["build", "test", "lint", "e2e"],
         "canTrackAnalytics": false,
         "showUsageWarnings": true
       }
     }
   },
-  "projects": {}
+  "projects": {
+    "auction-service": {
+      "tags": ["scope:cheapdeals-api", "type:service"]
+    },
+    "api-auction-service": {
+      "tags": ["scope:auction-service", "type:interface"]
+    }
+  }
 }

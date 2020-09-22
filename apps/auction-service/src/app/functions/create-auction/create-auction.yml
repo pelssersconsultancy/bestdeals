@@ -1,0 +1,8 @@
+CreateAuctionFunction:
+  handler: apps/auction-service/src/app/functions/create-auction/index.handler
+  description: A function to create an auction
+  events:
+    - http:
+        path: /auctions
+        method: post
+

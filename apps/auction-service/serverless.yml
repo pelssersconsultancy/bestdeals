@@ -1,0 +1,93 @@
+service:
+  name: auction-service
+
+plugins:
+  # - serverless-bundle
+  - serverless-pseudo-parameters
+  - serverless-webpack
+  # - serverless-offline
+  # - serverless-scriptable-plugin
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  memorySize: 256
+  stage: ${opt:stage, 'dev'}
+  region: eu-west-1
+  # environment:
+    # AUCTIONS_TABLE_NAME: ${self:custom.AuctionsTable.name}
+    # MAIL_QUEUE_URL: ${self:custom.MailQueue.url}
+    # AUCTIONS_BUCKET_NAME: ${self:custom.AuctionsBucket.name}
+  # iamRoleStatements:
+    # - ${file(iam/AuctionsTableIAM.yml):AuctionsTableIAM}
+    # - ${file(iam/MailQueueIAM.yml):MailQueueIAM}
+    # - ${file(iam/AuctionsBucketIAM.yml):AuctionsBucketIAM}
+
+# resources:
+#   Resources:
+    # AuctionsTable: ${file(resources/AuctionsTable.yml):AuctionsTable}
+    # AuctionsBucket: ${file(resources/AuctionsBucket.yml):AuctionsBucket}
+    # AuctionsBucketPolicy: ${file(resources/AuctionsBucket.yml):AuctionsBucketPolicy}
+
+functions:
+  createAuction: ${file(apps/auction-service/src/app/functions/create-auction/create-auction.yml):CreateAuctionFunction}
+  # getAuctions:
+  #   handler: src/handlers/get-auctions.handler
+  #   events:
+  #     - http:
+  #         method: GET
+  #         path: /auctions
+  #         cors: true
+  #         authorizer: ${self:custom.authorizer}
+  # getAuction:
+  #   handler: src/handlers/get-auction.handler
+  #   events:
+  #     - http:
+  #         method: GET
+  #         path: /auctions/{id}
+  #         cors: true
+  #         authorizer: ${self:custom.authorizer}
+  # placeBid:
+  #   handler: src/handlers/place-bid.handler
+  #   events:
+  #     - http:
+  #         method: PATCH
+  #         path: /auctions/{id}/bid
+  #         cors: true
+  #         authorizer: ${self:custom.authorizer}
+  # uploadAuctionPicture:
+  #   handler: src/handlers/upload-auction-picture.handler
+  #   events:
+  #     - http:
+  #         method: PATCH
+  #         path: /auctions/{id}/picture
+  #         cors: true
+  #         authorizer: ${self:custom.authorizer}
+
+  # processAuctions:
+  #   handler: src/handlers/process-auctions.handler
+    # events:
+    #   - schedule: rate(1 minute)
+
+custom:
+  # scriptHooks:
+  #   before:package:cleanup: cd apps/greeting-app/liquibase && npm run init
+  webpack:
+    webpackConfig: 'webpack.config.js' # Name of webpack configuration file
+    includeModules: true
+    packager: 'npm' # Reserved for future use. Any other values will not work right now.
+    packExternalModulesMaxBuffer: 204800 #
+
+# custom:
+  # authorizer: arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:auth-service-${self:provider.stage}-auth
+  # AuctionsTable:
+  #   name: !Ref AuctionsTable
+  #   arn: !GetAtt AuctionsTable.Arn
+  # MailQueue:
+  #   arn: ${cf:notification-service-${self:provider.stage}.MailQueueArn}
+  #   url: ${cf:notification-service-${self:provider.stage}.MailQueueUrl}
+  # AuctionsBucket:
+    # Attention: a bucket name must be worldwide unique and is thus also not region specific
+    # name: auctions-bucket-pelssersholding-${self:provider.stage}
+#   bundle:
+#     linting: false

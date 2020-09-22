@@ -1,7 +1,90 @@
 {
   "version": 1,
-  "projects": {},
+  "projects": {
+    "auction-service": {
+      "root": "apps/auction-service",
+      "sourceRoot": "apps/auction-service/src",
+      "projectType": "application",
+      "prefix": "auction-service",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "outputPath": "dist/apps/auction-service",
+            "main": "apps/auction-service/src/main.ts",
+            "tsConfig": "apps/auction-service/tsconfig.app.json",
+            "assets": ["apps/auction-service/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/auction-service/src/environments/environment.ts",
+                  "with": "apps/auction-service/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "auction-service:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": [
+              "apps/auction-service/tsconfig.app.json",
+              "apps/auction-service/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/auction-service/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/auction-service/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "api-auction-service": {
+      "root": "libs/api/auction-service",
+      "sourceRoot": "libs/api/auction-service/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": [
+              "libs/api/auction-service/tsconfig.lib.json",
+              "libs/api/auction-service/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/api/auction-service/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/api/auction-service/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    }
+  },
   "cli": {
-    "defaultCollection": "@nrwl/workspace"
-  }
+    "defaultCollection": "@nrwl/node"
+  },
+  "defaultProject": "auction-service"
 }
